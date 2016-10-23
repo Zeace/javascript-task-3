@@ -166,32 +166,50 @@ function changeTime(key, i, newTime, set) {
 
 function getTime(duration) {
     for (var key in timeForWork) {
-        for (var i = 0; i < timeForWork[key].length; i++) {
-            if ((timeForWork[key][i].dateTo - timeForWork[key][i].dateFrom) >= duration) {
-                var inform = [key, i];
-                switch (timeForWork[key][i].dateTo.getDay()) {
-                    case 1:
-                        inform.push('ПН');
-                        break;
-                    case 2:
-                        inform.push('ВТ');
-                        break;
-                    case 3:
-                        inform.push('СР');
-                        break;
-                    default:
-                        break;
-                }
-                var time = [timeForWork[key][i].dateFrom.getHours()];
-                time.push(timeForWork[key][i].dateFrom.getMinutes());
-                inform.push(time[0], time[1]);
+        if (!({}.hasOwnProperty.call(timeForWork, key))) {
+            return false;
+        }
+        if (calculateGetTime(key, duration)) {
 
-                return inform;
-            }
+            return calculateGetTime(key, duration);
+        }
+
+    }
+
+    return false;
+}
+function calculateGetTime(key, duration) {
+    for (var i = 0; i < timeForWork[key].length; i++) {
+        if ((timeForWork[key][i].dateTo - timeForWork[key][i].dateFrom) >= duration) {
+            var inform = [key, i];
+            inform.push(switchDay(timeForWork[key][i].dateTo.getDay()));
+            var time = [timeForWork[key][i].dateFrom.getHours()];
+            time.push(timeForWork[key][i].dateFrom.getMinutes());
+            inform.push(time[0], time[1]);
+
+            return inform;
         }
     }
 
     return false;
+}
+
+function switchDay(day) {
+    switch (day) {
+        case 1:
+
+            return 'ПН';
+        case 2:
+
+            return 'ВТ';
+        case 3:
+
+            return 'СР';
+        default:
+
+            return '';
+    }
+
 }
 
 function normalizeMinAndHour(array) {
