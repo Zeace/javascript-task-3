@@ -1,15 +1,17 @@
 'use strict';
 
 exports.isStar = true;
-var timeForWork = {
+var timeForWork = {};
+var timeForWorks = {
     mon: [{ 'dateFrom': new Date(2016, 9, 24), 'dateTo': new Date(2016, 9, 24) }],
     tue: [{ 'dateFrom': new Date(2016, 9, 25), 'dateTo': new Date(2016, 9, 25) }],
     wed: [{ 'dateFrom': new Date(2016, 9, 26), 'dateTo': new Date(2016, 9, 26) }]
 };
 var goodTime = [];
 
-
 exports.getAppropriateMoment = function (schedule, duration, workingHours) {
+    timeForWork = timeForWorks;
+    console.info(schedule, duration, workingHours);
     goodTime = normalizeMinAndHour(findTime(schedule, duration, workingHours));
 
     return {
