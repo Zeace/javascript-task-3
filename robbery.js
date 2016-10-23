@@ -24,7 +24,7 @@ exports.getAppropriateMoment = function (schedule, duration, workingHours) {
         format: function (template) {
             if (typeof(goodTime) !== 'object') {
 
-                return false;
+                return '';
             }
             template = template.replace(/(%DD)/g, goodTime[2]);
             template = template.replace(/(%HH)/g, goodTime[3]);
