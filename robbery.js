@@ -38,7 +38,7 @@ exports.getAppropriateMoment = function (schedule, duration, workingHours) {
 
                 return true;
             }
-            
+
             return false;
         }
     };
