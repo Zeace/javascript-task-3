@@ -88,8 +88,6 @@ function addSheduleTime(schedule, workingHours) {
         }
     }
 
-
-
     return true;
 }
 
@@ -127,6 +125,9 @@ function getDay(string) {
 
 function changeTimeForWork(from, to) {
     for (var key in timeForWork) {
+        if ({}.hasOwnProperty.call(timeForWork, key)) {
+            keys.push(key);
+        }
         for (var i = 0; i < timeForWork[key].length; i++) {
             var set = 0;
             var dateFrom = timeForWork[key][i].dateFrom;
