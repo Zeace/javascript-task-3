@@ -129,18 +129,18 @@ function changeTimeForWork(from, to) {
             return false;
         }
         for (var i = 0; i < timeForWork[key].length; i++) {
-            var set = 0;
-            var dateFrom = timeForWork[key][i].dateFrom;
-            var dateTo = timeForWork[key][i].dateTo;
-            var newTime = [];
-            changingTime(from, to, dateFrom, dateTo, newTime, set, key, i);
+            calculateTime(from, to, key, i);
         }
     }
 
     return true;
 }
 
-function changingTime(from, to, dateFrom, dateTo, newTime, set, key, i ) {
+function calculateTime(from, to, key, i) {
+    var set = 0;
+    var dateFrom = timeForWork[key][i].dateFrom;
+    var dateTo = timeForWork[key][i].dateTo;
+    var newTime = [];
     if ((from - dateFrom) > 0 && (from - dateFrom) < (dateTo - dateFrom)) {
         newTime.push({ 'dateFrom': dateFrom, 'dateTo': from });
         set++;
@@ -152,8 +152,8 @@ function changingTime(from, to, dateFrom, dateTo, newTime, set, key, i ) {
     if (set !== 0) {
         changeTime(key, i, newTime, set);
     }
-
 }
+
 
 function changeTime(key, i, newTime, set) {
     timeForWork[key].splice(i, 1);
