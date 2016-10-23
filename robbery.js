@@ -34,8 +34,12 @@ exports.getAppropriateMoment = function (schedule, duration, workingHours) {
         },
 
         tryLater: function () {
+            if (getTimeLater(duration * 60000) !== false) {
 
-            return getTimeLater(duration * 60000);
+                return true;
+            }
+            
+            return false;
         }
     };
 };
