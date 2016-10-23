@@ -125,29 +125,34 @@ function getDay(string) {
 
 function changeTimeForWork(from, to) {
     for (var key in timeForWork) {
-        if ({}.hasOwnProperty.call(timeForWork, key)) {
-            keys.push(key);
+        if (!({}.hasOwnProperty.call(timeForWork, key))) {
+            return false;
         }
         for (var i = 0; i < timeForWork[key].length; i++) {
             var set = 0;
             var dateFrom = timeForWork[key][i].dateFrom;
             var dateTo = timeForWork[key][i].dateTo;
             var newTime = [];
-            if ((from - dateFrom) > 0 && (from - dateFrom) < (dateTo - dateFrom)) {
-                newTime.push({ 'dateFrom': dateFrom, 'dateTo': from });
-                set++;
-            }
-            if ((dateTo - to) > 0 && (dateTo - to) < (dateTo - dateFrom)) {
-                newTime.push({ 'dateFrom': to, 'dateTo': dateTo });
-                set++;
-            }
-            if (set !== 0) {
-                changeTime(key, i, newTime, set);
-            }
+            changingTime(from, to, dateFrom, dateTo, newTime, set, key, i);
         }
     }
 
     return true;
+}
+
+function changingTime(from, to, dateFrom, dateTo, newTime, set, key, i ) {
+    if ((from - dateFrom) > 0 && (from - dateFrom) < (dateTo - dateFrom)) {
+        newTime.push({ 'dateFrom': dateFrom, 'dateTo': from });
+        set++;
+    }
+    if ((dateTo - to) > 0 && (dateTo - to) < (dateTo - dateFrom)) {
+        newTime.push({ 'dateFrom': to, 'dateTo': dateTo });
+        set++;
+    }
+    if (set !== 0) {
+        changeTime(key, i, newTime, set);
+    }
+
 }
 
 function changeTime(key, i, newTime, set) {
