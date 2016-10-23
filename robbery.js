@@ -75,12 +75,20 @@ function addBankTime(workingHours) {
 }
 
 function addSheduleTime(schedule, workingHours) {
+    var keys = [];
     for (var key in schedule) {
-        for (var i = 0; i < schedule[key].length; i++) {
-            correctionSchedule(schedule[key][i], getTimeZone(workingHours));
-            changeTimeForWork(schedule[key][i].from, schedule[key][i].to);
+        if ({}.hasOwnProperty.call(schedule, key)) {
+            keys.push(key);
         }
     }
+    for (var j = 0; j < keys.length; j++) {
+        for (var i = 0; i < schedule[keys[j]].length; i++) {
+            correctionSchedule(schedule[keys[j]][i], getTimeZone(workingHours));
+            changeTimeForWork(schedule[keys[j]][i].from, schedule[keys[j]][i].to);
+        }
+    }
+
+
 
     return true;
 }
@@ -144,7 +152,7 @@ function changeTimeForWork(from, to) {
 function changeTime(key, i, newTime, set) {
     timeForWork[key].splice(i, 1);
     for (var j = set; j > 0; j--) {
-        timeForWork[key].splice(i, 0, newTime[j - 1])
+        timeForWork[key].splice(i, 0, newTime[j - 1]);
     }
 
     return true;
