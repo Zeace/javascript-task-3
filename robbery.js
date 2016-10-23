@@ -33,11 +33,7 @@ exports.getAppropriateMoment = function (schedule, duration, workingHours) {
         },
 
         tryLater: function () {
-            if (!this.exists()) {
-                
-                return false;
-            }
-            if (getTimeLater(duration * 60000) !== false) {
+            if (getTimeLater(duration * 60000) !== false || !this.exists()) {
 
                 return true;
             }
