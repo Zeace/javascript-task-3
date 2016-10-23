@@ -10,7 +10,6 @@ var goodTime = [];
 
 
 exports.getAppropriateMoment = function (schedule, duration, workingHours) {
-    console.info(schedule, duration, workingHours);
     goodTime = normalizeMinAndHour(findTime(schedule, duration, workingHours));
 
     return {
