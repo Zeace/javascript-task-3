@@ -2,9 +2,9 @@
 
 exports.isStar = true;
 var timeForWork = {
-    mon: [{'dateFrom': new Date(2016, 9, 24),'dateTo': new Date(2016, 9, 24)}],
-    tue: [{'dateFrom': new Date(2016, 9, 25),'dateTo': new Date(2016, 9, 25)}],
-    wed: [{'dateFrom': new Date(2016, 9, 26),'dateTo': new Date(2016, 9, 26)}]
+    mon: [{ 'dateFrom': new Date(2016, 9, 24), 'dateTo': new Date(2016, 9, 24) }],
+    tue: [{ 'dateFrom': new Date(2016, 9, 25), 'dateTo': new Date(2016, 9, 25) }],
+    wed: [{ 'dateFrom': new Date(2016, 9, 26), 'dateTo': new Date(2016, 9, 26) }]
 };
 var goodTime = [];
 
@@ -59,9 +59,10 @@ function addBankTime(workingHours) {
     var open = workingHours.from.split(':');
     var close = workingHours.to.split(':');
     var dateArray = [];
-    for (var i = 0; i<3; i++) {
+    for (var i = 0; i < 3; i++) {
+        var intHour = parseInt(close[0]);
         dateArray[i] = new Date(2016, 9, (i + 24), parseInt(open[0]), parseInt(open[1]));
-        dateArray[i + 3] = new Date(2016, 9, (i + 24), parseInt(close[0]), parseInt(close[1].substr(0, 1)));
+        dateArray[i + 3] = new Date(2016, 9, (i + 24), intHour, parseInt(close[1].substr(0, 1)));
     }
     timeForWork.mon[0].dateFrom = dateArray[0];
     timeForWork.mon[0].dateTo = dateArray[3];
@@ -90,10 +91,10 @@ function correctionSchedule(interval, timeZone) {
 
             return false;
         }
-        var day = getDay(interval[key].substr(0,2));
-        var corrective = timeZone - parseInt(interval[key].substr(9,1), 10);
-        var hour = parseInt(interval[key].substr(3,2), 10) + corrective;
-        interval[key] = new Date (2016, 9, day, hour,  parseInt(interval[key].substr(6,2), 10))
+        var day = getDay(interval[key].substr(0, 2));
+        var corrective = timeZone - parseInt(interval[key].substr(9, 1), 10);
+        var hour = parseInt(interval[key].substr(3, 2), 10) + corrective;
+        interval[key] = new Date (2016, 9, day, hour, parseInt(interval[key].substr(6, 2), 10));
     }
 
     return true;
@@ -123,18 +124,17 @@ function changeTimeForWork(from, to) {
             var dateFrom = timeForWork[key][i].dateFrom;
             var dateTo = timeForWork[key][i].dateTo;
             var newTime = [];
-            if ((from-dateFrom) > 0 && (from-dateFrom) < (dateTo-dateFrom)){
-                newTime.push({'dateFrom': dateFrom,'dateTo': from});
+            if ((from - dateFrom) > 0 && (from - dateFrom) < (dateTo - dateFrom)) {
+                newTime.push({ 'dateFrom': dateFrom, 'dateTo': from });
                 set++;
             }
-            if ((dateTo-to) > 0 && (dateTo-to) < (dateTo-dateFrom)){
-                newTime.push({'dateFrom': to,'dateTo': dateTo});
+            if ((dateTo - to) > 0 && (dateTo - to) < (dateTo - dateFrom)) {
+                newTime.push({ 'dateFrom': to, 'dateTo': dateTo });
                 set++;
             }
             if (set !== 0) {
-                changeTime(key, i, newTime, set)
+                changeTime(key, i, newTime, set);
             }
-
         }
     }
 
@@ -165,8 +165,12 @@ function getTime(duration) {
                     case 3:
                         inform.push('СР');
                         break;
+                    default:
+                        break;
                 }
-                inform.push(timeForWork[key][i].dateFrom.getHours(), timeForWork[key][i].dateFrom.getMinutes());
+                var time = [timeForWork[key][i].dateFrom.getHours()];
+                time.push(timeForWork[key][i].dateFrom.getMinutes());
+                inform.push(time[0], time[1]);
 
                 return inform;
             }
@@ -177,17 +181,17 @@ function getTime(duration) {
 }
 
 function normalizeMinAndHour(array) {
-    if (array == false) {
+    if (array === false) {
 
         return false;
     }
     var normalArray = [array[0], array[1], array[2]];
-    if ( array[3] < 10) {
+    if (array[3] < 10) {
         normalArray.push('0' + array[3]);
     } else {
         normalArray.push(array[3]);
     }
-    if ( array[4] < 10) {
+    if (array[4] < 10) {
         normalArray.push('0' + array[4]);
     } else {
         normalArray.push(array[4]);
@@ -204,6 +208,7 @@ function getTimeLater(duration) {
 
         return false;
     }
-    goodTime =normalizeMinAndHour(getTime(duration));
+    goodTime = normalizeMinAndHour(getTime(duration));
+
     return getTime(duration);
 }
