@@ -1,16 +1,15 @@
 'use strict';
 
 exports.isStar = true;
-var timeForWork = {};
-var timeForWorks = {
+// var timeForWork = {};
+var timeForWork = {
     mon: [{ 'dateFrom': new Date(2016, 9, 24), 'dateTo': new Date(2016, 9, 24) }],
     tue: [{ 'dateFrom': new Date(2016, 9, 25), 'dateTo': new Date(2016, 9, 25) }],
     wed: [{ 'dateFrom': new Date(2016, 9, 26), 'dateTo': new Date(2016, 9, 26) }]
 };
 var goodTime = [];
 
-exports.getAppropriateMoment = function (schedule, duration, workingHours) {
-    timeForWork = timeForWorks;
+exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
     console.info(schedule, duration, workingHours);
     goodTime = normalizeMinAndHour(findTime(schedule, duration, workingHours));
 
@@ -21,7 +20,10 @@ exports.getAppropriateMoment = function (schedule, duration, workingHours) {
             return typeof (goodTime) === 'object';
         },
 
+        sch: function () {
 
+            return timeForWork;
+        },
         format: function (template) {
             if (typeof(goodTime) !== 'object') {
 
@@ -46,7 +48,15 @@ exports.getAppropriateMoment = function (schedule, duration, workingHours) {
 };
 
 function findTime(schedule, duration, workingHours) {
-    if (typeof(goodTime) === 'object') {
+    if (goodTime.length === 5) {
+        timeForWork = {
+            mon: [{ 'dateFrom': new Date(2016, 9, 24), 'dateTo': new Date(2016, 9, 24) }],
+            tue: [{ 'dateFrom': new Date(2016, 9, 25), 'dateTo': new Date(2016, 9, 25) }],
+            wed: [{ 'dateFrom': new Date(2016, 9, 26), 'dateTo': new Date(2016, 9, 26) }]
+        };
+        goodTime = [];
+    }
+    if (typeof(goodTime) === 'object' && goodTime.length === 0) {
         addBankTime(workingHours);
     }
     addSheduleTime(schedule, workingHours);
@@ -174,6 +184,7 @@ function getTime(duration) {
         if (!({}.hasOwnProperty.call(timeForWork, key))) {
             return false;
         }
+
         if (calculateGetTime(key, duration)) {
 
             return calculateGetTime(key, duration);
@@ -184,6 +195,7 @@ function getTime(duration) {
     return false;
 }
 function calculateGetTime(key, duration) {
+
     for (var i = 0; i < timeForWork[key].length; i++) {
         if ((timeForWork[key][i].dateTo - timeForWork[key][i].dateFrom) >= duration) {
             var inform = [key, i];
@@ -238,6 +250,10 @@ function normalizeMinAndHour(array) {
 }
 
 function getTimeLater(duration) {
+    if (typeof(goodTime) === 'boolean' || goodTime.length === 0) {
+
+        return false;
+    }
     var date = timeForWork[goodTime[0]][goodTime[1]].dateFrom;
     timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(date.getMinutes() + 30);
     if (getTime(duration) === false) {
