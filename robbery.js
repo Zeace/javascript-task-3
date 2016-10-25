@@ -120,6 +120,7 @@ function correctionSchedule(interval, timeZone) {
         var corrective = timeZone - parseInt(interval[key].substr(9, 1), 10);
         var hour = parseInt(interval[key].substr(3, 2), 10) + corrective;
         interval[key] = new Date (2016, 9, day, hour, parseInt(interval[key].substr(6, 2), 10));
+
     }
 
     return true;
@@ -160,21 +161,31 @@ function calculateTime(from, to, key, i) {
     var dateFrom = timeForWork[key][i].dateFrom;
     var dateTo = timeForWork[key][i].dateTo;
     var newTime = [];
-    if ((from - dateFrom) > 0 && (from - dateFrom) < (dateTo - dateFrom)) {
+    if ((from - dateFrom) > 0 && from < dateTo) {
         newTime.push({ 'dateFrom': dateFrom, 'dateTo': from });
         set++;
     }
-    if ((dateTo - to) > 0 && (dateTo - to) < (dateTo - dateFrom)) {
+    if ((dateTo - to) > 0 && to > dateFrom) {
         newTime.push({ 'dateFrom': to, 'dateTo': dateTo });
         set++;
+    }
+    if (to > dateTo && from < dateFrom) {
+        changeTime(key, -2, dateFrom);
+
+        return true;
     }
     if (set !== 0) {
         changeTime(key, i, newTime, set);
     }
 }
 
-
 function changeTime(key, i, newTime, set) {
+    if (i === -2) {
+        timeForWork[key].splice(0, timeForWork[key].length);
+        timeForWork[key].push({ 'dateFrom': newTime, 'dateTo': newTime });
+
+        return true;
+    }
     timeForWork[key].splice(i, 1);
     for (var j = set; j > 0; j--) {
         timeForWork[key].splice(i, 0, newTime[j - 1]);
