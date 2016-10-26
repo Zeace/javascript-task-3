@@ -73,6 +73,11 @@ function findTime(schedule, duration, workingHours) {
 
             return false;
         }
+        var open = workingHours.from.split(':');
+        if (workingHours.from === '' || open[0] < 0 || parseInt(open[1].substr(0, 2)) < 0) {
+
+            return false;
+        }
         addBankTime(workingHours);
     }
     addSheduleTime(schedule, workingHours);
