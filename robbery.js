@@ -124,7 +124,7 @@ function addSheduleTime(schedule, workingHours) {
 
 function correctionSchedule(interval, timeZone) {
     for (var key in interval) {
-        if (typeof(interval[key]) === 'object') {
+        if (typeof(interval[key]) === 'object' || timeZone > 12) {
 
             return false;
         }
