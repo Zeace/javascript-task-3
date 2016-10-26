@@ -47,7 +47,7 @@ exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
                 return false;
             }
 
-            if (getTimeLater(duration * 60000) !== false) {
+            if (getTimeLater(duration * 60000)) {
 
                 return true;
             }
