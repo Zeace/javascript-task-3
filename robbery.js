@@ -156,6 +156,10 @@ function getDay(string) {
 }
 
 function changeTimeForWork(from, to) {
+    if (from.getTime() === to.getTime()) {
+
+        return false;
+    }
     for (var key in timeForWork) {
         if (!({}.hasOwnProperty.call(timeForWork, key))) {
             return false;
