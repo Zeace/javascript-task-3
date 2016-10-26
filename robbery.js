@@ -1,6 +1,6 @@
 'use strict';
 
-exports.isStar = true;
+exports.isStar = false;
 var DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
 var timeForWork = {
     mon: [{ 'dateFrom': new Date(2016, 9, 24), 'dateTo': new Date(2016, 9, 24) }],
