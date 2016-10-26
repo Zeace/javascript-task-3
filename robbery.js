@@ -263,7 +263,7 @@ function normalizeMinAndHour(array) {
 }
 
 function getTimeLater(duration) {
-    if (typeof(goodTime) === 'boolean' || goodTime.length === 0 ) {
+    if (typeof(goodTime) === 'boolean' || goodTime.length === 0) {
 
         return false;
     }
