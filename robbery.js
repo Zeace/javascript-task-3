@@ -67,7 +67,7 @@ function findTime(schedule, duration, workingHours) {
         goodTime = [];
     }
     if (typeof(goodTime) === 'object' && goodTime.length === 0) {
-        if (workingHours.from === '' || !isValidBankTime(workingHours)) {
+        if (workingHours.from === '' || !isValidBankTime(workingHours) || isNaN(workingHours.from)) {
 
             return false;
         }
