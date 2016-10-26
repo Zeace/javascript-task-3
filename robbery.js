@@ -46,6 +46,7 @@ exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
 
                 return false;
             }
+
             if (getTimeLater(duration * 60000) !== false) {
 
                 return true;
@@ -66,6 +67,11 @@ function findTime(schedule, duration, workingHours) {
         goodTime = [];
     }
     if (typeof(goodTime) === 'object' && goodTime.length === 0) {
+        var close = workingHours.to.split(':');
+        if (parseInt(close[0]) > 23) {
+
+            return false;
+        }
         addBankTime(workingHours);
     }
     addSheduleTime(schedule, workingHours);
