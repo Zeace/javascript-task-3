@@ -10,13 +10,14 @@ var timeForWork = {
 var goodTime = [];
 
 exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
+
     if (typeof(workingHours.from) === 'undefined' || duration <= 0) {
 
         goodTime = false;
     } else {
         goodTime = normalizeMinAndHour(findTime(schedule, duration, workingHours));
     }
-
+    console.log(timeForWork)
     return {
 
         exists: function () {
@@ -144,6 +145,8 @@ function correctionSchedule(interval, timeZone) {
         }
         var day = getDay(interval[key].substr(0, 2));
         var corrective = timeZone - parseInt(interval[key].substr(9, 1), 10);
+        console.log(interval[key])
+        console.log(corrective)
         var hour = parseInt(interval[key].substr(3, 2), 10) + corrective;
         interval[key] = new Date (2016, 9, day, hour, parseInt(interval[key].substr(6, 2), 10));
 
@@ -163,9 +166,12 @@ function getDay(string) {
         case 'СР':
 
             return 26;
-        default:
+        case 'ЧТ':
 
             return 27;
+        default:
+
+            return 28;
     }
 }
 
