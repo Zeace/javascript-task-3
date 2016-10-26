@@ -68,7 +68,8 @@ function findTime(schedule, duration, workingHours) {
     }
     if (typeof(goodTime) === 'object' && goodTime.length === 0) {
         var close = workingHours.to.split(':');
-        if (parseInt(close[0]) > 23 || parseInt(close[1].substr(0, 2)) > 59) {
+        close[0] = parseInt(close[0]);
+        if (workingHours.to === '' || close[0] > 23 || parseInt(close[1].substr(0, 2)) > 59) {
 
             return false;
         }
