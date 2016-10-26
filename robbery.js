@@ -10,7 +10,7 @@ var timeForWork = {
 var goodTime = [];
 
 exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
-    if (typeof(workingHours.from) === 'undefined' || duration === 0) {
+    if (typeof(workingHours.from) === 'undefined' || duration <= 0) {
 
         goodTime = false;
     } else {
@@ -267,10 +267,10 @@ function getTimeLater(duration) {
 
         return false;
     }
-    var date = timeForWork[goodTime[0]][goodTime[1]].dateFrom;
-    timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(date.getMinutes() + 30);
+    var dateForCheck = timeForWork[goodTime[0]][goodTime[1]].dateFrom;
+    timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(dateForCheck.getMinutes() + 30);
     if (getTime(duration) === false) {
-        timeForWork[goodTime[0]][goodTime[1]].dateFrom = date;
+        timeForWork[goodTime[0]][goodTime[1]].dateFrom = dateForCheck;
 
         return false;
     }
