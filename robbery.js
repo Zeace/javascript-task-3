@@ -1,7 +1,7 @@
 'use strict';
 
 exports.isStar = true;
-// var timeForWork = {};
+var DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
 var timeForWork = {
     mon: [{ 'dateFrom': new Date(2016, 9, 24), 'dateTo': new Date(2016, 9, 24) }],
     tue: [{ 'dateFrom': new Date(2016, 9, 25), 'dateTo': new Date(2016, 9, 25) }],
@@ -24,11 +24,12 @@ exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
             return typeof (goodTime) === 'object';
         },
 
-        sch: function () {
-
-            return timeForWork;
-        },
         format: function (template) {
+            if (!this.exists()) {
+
+                return '';
+            }
+
             if (typeof(goodTime) !== 'object') {
 
                 return '';
@@ -41,7 +42,11 @@ exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
         },
 
         tryLater: function () {
-            if (getTimeLater(duration * 60000) !== false || !this.exists()) {
+            if (!this.exists()) {
+
+                return false;
+            }
+            if (getTimeLater(duration * 60000) !== false) {
 
                 return true;
             }
@@ -71,7 +76,7 @@ function findTime(schedule, duration, workingHours) {
 function getTimeZone(workingHours) {
     var string = workingHours.from.toString();
 
-    return string.charAt(string.length - 1);
+    return parseInt(string.substring(6), 10);
 }
 
 function addBankTime(workingHours) {
@@ -214,7 +219,7 @@ function calculateGetTime(key, duration) {
     for (var i = 0; i < timeForWork[key].length; i++) {
         if ((timeForWork[key][i].dateTo - timeForWork[key][i].dateFrom) >= duration) {
             var inform = [key, i];
-            inform.push(switchDay(timeForWork[key][i].dateTo.getDay()));
+            inform.push(DAYS[timeForWork[key][i].dateTo.getDay() - 1]);
             var time = [timeForWork[key][i].dateFrom.getHours()];
             time.push(timeForWork[key][i].dateFrom.getMinutes());
             inform.push(time[0], time[1]);
@@ -224,24 +229,6 @@ function calculateGetTime(key, duration) {
     }
 
     return false;
-}
-
-function switchDay(day) {
-    switch (day) {
-        case 1:
-
-            return 'ПН';
-        case 2:
-
-            return 'ВТ';
-        case 3:
-
-            return 'СР';
-        default:
-
-            return '';
-    }
-
 }
 
 function normalizeMinAndHour(array) {
