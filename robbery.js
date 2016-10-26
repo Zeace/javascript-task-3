@@ -75,6 +75,7 @@ function findTime(schedule, duration, workingHours) {
     }
     addSheduleTime(schedule, workingHours);
 
+
     return getTime(duration * 60000);
 }
 
@@ -108,15 +109,23 @@ function addBankTime(workingHours) {
         var intHour = parseInt(close[0]);
         dateArray[i] = new Date(2016, 9, (i + 24), parseInt(open[0]), parseInt(open[1]));
         dateArray[i + 3] = new Date(2016, 9, (i + 24), intHour, parseInt(close[1].substr(0, 2)));
+        if (dateArray[i] > dateArray[i + 3]) {
+
+            return false;
+        }
     }
+    addBankDays(dateArray);
+
+    return true;
+}
+
+function addBankDays(dateArray) {
     timeForWork.mon[0].dateFrom = dateArray[0];
     timeForWork.mon[0].dateTo = dateArray[3];
     timeForWork.tue[0].dateFrom = dateArray[1];
     timeForWork.tue[0].dateTo = dateArray[4];
     timeForWork.wed[0].dateFrom = dateArray[2];
     timeForWork.wed[0].dateTo = dateArray[5];
-
-    return true;
 }
 
 function addSheduleTime(schedule, workingHours) {
