@@ -30,7 +30,7 @@ exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
                 return '';
             }
 
-            if (typeof(goodTime) !== 'object' || duration === 0) {
+            if (typeof(goodTime) !== 'object' || duration === 0 || !template) {
 
                 return '';
             }
