@@ -68,7 +68,7 @@ function findTime(schedule, duration, workingHours) {
     }
     if (typeof(goodTime) === 'object' && goodTime.length === 0) {
         var close = workingHours.to.split(':');
-        if (parseInt(close[0]) > 23) {
+        if (parseInt(close[0]) > 23 || parseInt(close[1].substr(0, 2)) > 59) {
 
             return false;
         }
@@ -92,7 +92,7 @@ function addBankTime(workingHours) {
     for (var i = 0; i < 3; i++) {
         var intHour = parseInt(close[0]);
         dateArray[i] = new Date(2016, 9, (i + 24), parseInt(open[0]), parseInt(open[1]));
-        dateArray[i + 3] = new Date(2016, 9, (i + 24), intHour, parseInt(close[1].substr(0, 1)));
+        dateArray[i + 3] = new Date(2016, 9, (i + 24), intHour, parseInt(close[1].substr(0, 2)));
     }
     timeForWork.mon[0].dateFrom = dateArray[0];
     timeForWork.mon[0].dateTo = dateArray[3];
