@@ -67,11 +67,14 @@ function findTime(schedule, duration, workingHours) {
         goodTime = [];
     }
     if (typeof(goodTime) === 'object' && goodTime.length === 0) {
-        if (workingHours.from === '' || !isValidBTime(workingHours) || !isNaN(workingHours.from)) {
+        if (workingHours.from === '' || !isValidBTime(workingHours)) {
 
             return false;
         }
-        addBankTime(workingHours);
+        if (!addBankTime(workingHours)) {
+
+            return false;
+        }
     }
     addSheduleTime(schedule, workingHours);
 
