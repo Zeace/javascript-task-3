@@ -1,6 +1,6 @@
 'use strict';
 
-exports.isStar = false;
+exports.isStar = true;
 var DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
 var timeForWork = {
     mon: [{ 'dateFrom': new Date(2016, 9, 24), 'dateTo': new Date(2016, 9, 24) }],
@@ -10,7 +10,7 @@ var timeForWork = {
 var goodTime = [];
 
 exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
-    if (typeof(workingHours.from) === 'undefined') {
+    if (typeof(workingHours.from) === 'undefined' || duration === 0) {
 
         goodTime = false;
     } else {
@@ -263,7 +263,7 @@ function normalizeMinAndHour(array) {
 }
 
 function getTimeLater(duration) {
-    if (typeof(goodTime) === 'boolean' || goodTime.length === 0) {
+    if (typeof(goodTime) === 'boolean' || goodTime.length === 0 ) {
 
         return false;
     }
