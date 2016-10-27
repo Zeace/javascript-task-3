@@ -41,6 +41,10 @@ exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
         },
 
         tryLater: function () {
+            if (!this.exists()) {
+
+                return false;
+            }
             if (getTimeLater(duration * 60000)) {
 
                 return true;
@@ -189,7 +193,7 @@ function getDay(string) {
 }
 
 function changeTimeForWork(from, to) {
-    if (from.getTime() === to.getTime()) {
+    if (from.getTime() === to.getTime() || from > to) {
 
         return false;
     }
