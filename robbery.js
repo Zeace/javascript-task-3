@@ -74,9 +74,8 @@ function findTime(schedule, duration, workingHours) {
 
             return false;
         }
+        addSheduleTime(schedule, workingHours);
     }
-    addSheduleTime(schedule, workingHours);
-
 
     return getTime(duration * 60000);
 }
