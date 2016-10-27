@@ -98,7 +98,7 @@ function isValidBTime(workingHours) {
 function isValidOneTime(time) {
     time[0] = parseInt(time[0]);
     time[1] = parseInt(time[1].split('+')[0]);
-    if (time[0] < 0 < time[0] > 23 || time[1] < 0 || time[1] > 59) {
+    if (time[0] < 0 || time[0] > 23 || time[1] < 0 || time[1] > 59) {
 
         return true;
     }
