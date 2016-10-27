@@ -156,7 +156,7 @@ function correctionSchedule(interval, timeZone) {
             return false;
         }
         var day = getDay(interval[key].substr(0, 2));
-        var corrective = timeZone - parseInt(interval[key].substr(9, 1), 10);
+        var corrective = timeZone - parseInt(interval[key].split('+')[1], 10);
         var hour = parseInt(interval[key].substr(3, 2), 10) + corrective;
         interval[key] = new Date (2016, 9, day, hour, parseInt(interval[key].substr(6, 2), 10));
 
