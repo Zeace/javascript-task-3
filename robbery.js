@@ -306,6 +306,7 @@ function getTimeLater(duration) {
         return false;
     }
     var dateForCheck = timeForWork[goodTime[0]][goodTime[1]].dateFrom;
+    transferLate(dateForCheck);
     timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(dateForCheck.getMinutes() + 30);
     if (getTime(duration) === false) {
         timeForWork[goodTime[0]][goodTime[1]].dateFrom = dateForCheck;
@@ -315,4 +316,35 @@ function getTimeLater(duration) {
     goodTime = normalizeMinAndHour(getTime(duration));
 
     return getTime(duration);
+}
+
+function transferLate(dateForCheck) {
+    var a = dateForCheck;
+    var b = new Date(a);
+    b.setMinutes(b.getMinutes() + 30);
+    if (a.getDay() !== b.getDay()) {
+        addBusyLate(getKey(b.getDay()), b.valueOf());
+    }
+
+    return a;
+}
+
+function getKey(day) {
+    switch (day) {
+        case 2:
+
+            return 'tue';
+        case 3:
+
+            return 'wed';
+        default:
+
+            return 0;
+    }
+}
+
+function addBusyLate(day, value) {
+    if (timeForWork[day][0].dateFrom.valueOf() < value) {
+        timeForWork[day][0].dateFrom = new Date(value);
+    }
 }
