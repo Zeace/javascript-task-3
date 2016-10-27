@@ -10,7 +10,7 @@ var timeForWork = {
 var goodTime = [];
 
 exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
-    if (typeof(workingHours.from) === 'undefined' || duration <= 0) {
+    if (typeof(workingHours.from) === 'undefined' || !(duration - Math.floor(duration) === 0)) {
 
         goodTime = false;
     } else {
