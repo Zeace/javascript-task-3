@@ -10,9 +10,10 @@ var timeForWork = {
 var goodTime = [];
 
 exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
-    if (typeof(workingHours) === 'undefined' || !(duration - Math.floor(duration) === 0)) {
-
-        goodTime = false;
+    if (typeof(workingHours) === 'undefined' || typeof(duration) === 'undefined' || duration <= 0) {
+        if (typeof(schedule) === 'undefined') {
+            goodTime = false;
+        }
     } else {
         goodTime = normalizeMinAndHour(findTime(schedule, duration, workingHours));
     }
