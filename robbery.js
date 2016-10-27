@@ -41,11 +41,6 @@ exports.getAppropriateMoment = function ah(schedule, duration, workingHours) {
         },
 
         tryLater: function () {
-            if (!this.exists()) {
-
-                return false;
-            }
-
             if (getTimeLater(duration * 60000)) {
 
                 return true;
@@ -249,6 +244,7 @@ function changeTime(key, i, newTime, set) {
 function getTime(duration) {
     for (var key in timeForWork) {
         if (!({}.hasOwnProperty.call(timeForWork, key))) {
+
             return false;
         }
 
