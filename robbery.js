@@ -83,19 +83,27 @@ function findTime(schedule, duration, workingHours) {
 }
 
 function isValidBTime(workingHours) {
-    var close = workingHours.to.split(':');
-    close[0] = parseInt(close[0]);
-    if (workingHours.to === '' || close[0] > 23 || parseInt(close[1].substr(0, 2)) > 59) {
+    if (workingHours.to === '' || isValidOneTime(workingHours.to.split(':'))) {
 
         return false;
     }
-    var open = workingHours.from.split(':');
-    if (open[0] < 0 || parseInt(open[1].substr(0, 2)) < 0) {
+    if (workingHours.from === '' || isValidOneTime(workingHours.from.split(':'))) {
 
         return false;
     }
 
     return true;
+}
+
+function isValidOneTime(time) {
+    time[0] = parseInt(time[0]);
+    time[1] = parseInt(time[1].split('+')[0]);
+    if (time[0] < 0 || time[0] > 23 || time[1] < 0 || time[1] > 59) {
+
+        return true;
+    }
+
+    return false;
 }
 
 function getTimeZone(workingHours) {
