@@ -188,7 +188,7 @@ function getDay(string) {
 function changeTimeForWork(from, to) {
     if (from.getTime() === to.getTime()) {
 
-        // return false;
+        return false;
     }
     for (var key in timeForWork) {
         if (!({}.hasOwnProperty.call(timeForWork, key))) {
@@ -207,15 +207,15 @@ function calculateTime(from, to, key, i) {
     var dateFrom = timeForWork[key][i].dateFrom;
     var dateTo = timeForWork[key][i].dateTo;
     var newTime = [];
-    if ((from - dateFrom) > 0 && from < dateTo) {
+    if (from >= dateFrom && from <= dateTo) {
         newTime.push({ 'dateFrom': dateFrom, 'dateTo': from });
         set++;
     }
-    if ((dateTo - to) > 0 && to > dateFrom) {
+    if (to <= dateTo && to >= dateFrom) {
         newTime.push({ 'dateFrom': to, 'dateTo': dateTo });
         set++;
     }
-    if (to > dateTo && from < dateFrom) {
+    if (to >= dateTo && from <= dateFrom) {
         changeTime(key, -2, dateFrom);
 
         return true;
