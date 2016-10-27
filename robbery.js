@@ -207,11 +207,11 @@ function calculateTime(from, to, key, i) {
     var dateFrom = timeForWork[key][i].dateFrom;
     var dateTo = timeForWork[key][i].dateTo;
     var newTime = [];
-    if (from > dateFrom && from < dateTo) {
+    if (from >= dateFrom && from <= dateTo) {
         newTime.push({ 'dateFrom': dateFrom, 'dateTo': from });
         set++;
     }
-    if (to < dateTo && to > dateFrom) {
+    if (to <= dateTo && to >= dateFrom) {
         newTime.push({ 'dateFrom': to, 'dateTo': dateTo });
         set++;
     }
