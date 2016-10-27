@@ -295,12 +295,19 @@ function normalizeMinAndHour(array) {
 }
 
 function getTimeLater(duration) {
-    if (typeof(goodTime) === 'boolean' || goodTime.length === 0) {
+    if (typeof(goodTime) === 'boolean' || goodTime.length !== 5) {
 
         return false;
     }
     var dateForCheck = timeForWork[goodTime[0]][goodTime[1]].dateFrom;
-    timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(dateForCheck.getMinutes() + 30);
+    var dateFr = timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(dateForCheck
+            .getMinutes() + 30);
+    var dateTo = timeForWork[goodTime[0]][goodTime[1]].dateFrom;
+    if (dateFr >= dateTo) {
+        timeForWork[goodTime[0]][goodTime[1]].dateFrom = dateTo;
+    } else {
+        timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(dateForCheck.getMinutes() + 30);
+    }
     if (getTime(duration) === false) {
         timeForWork[goodTime[0]][goodTime[1]].dateFrom = dateForCheck;
 
