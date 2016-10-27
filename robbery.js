@@ -113,7 +113,7 @@ function addBankTime(workingHours) {
         var intHour = parseInt(close[0]);
         dateArray[i] = new Date(2016, 9, (i + 24), parseInt(open[0]), parseInt(open[1]));
         dateArray[i + 3] = new Date(2016, 9, (i + 24), intHour, parseInt(close[1].substr(0, 2)));
-        if (dateArray[i] > dateArray[i + 3]) {
+        if (dateArray[i] > dateArray[i + 3] || !getTimeZone(workingHours)) {
 
             return false;
         }
@@ -151,7 +151,7 @@ function addSheduleTime(schedule, workingHours) {
 
 function correctionSchedule(interval, timeZone) {
     for (var key in interval) {
-        if (typeof(interval[key]) === 'object' || (timeZone === 0)) {
+        if (typeof(interval[key]) === 'object' || !timeZone) {
 
             return false;
         }
