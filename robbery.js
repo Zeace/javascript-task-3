@@ -99,9 +99,10 @@ function isValidBTime(workingHours) {
 }
 
 function getTimeZone(workingHours) {
-    var string = workingHours.from.toString();
+    var timeZoneBank = workingHours.from !== undefined ? Number(workingHours.from
+        .split('+')[1]) : 0;
 
-    return parseInt(string.substring(6), 10);
+    return timeZoneBank;
 }
 
 function addBankTime(workingHours) {
@@ -150,7 +151,7 @@ function addSheduleTime(schedule, workingHours) {
 
 function correctionSchedule(interval, timeZone) {
     for (var key in interval) {
-        if (typeof(interval[key]) === 'object' || !(timeZone - Math.floor(timeZone) === 0)) {
+        if (typeof(interval[key]) === 'object' || (timeZone === 0)) {
 
             return false;
         }
