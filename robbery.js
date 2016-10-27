@@ -98,7 +98,7 @@ function isValidBTime(workingHours) {
 function isValidOneTime(time) {
     time[0] = parseInt(time[0]);
     time[1] = parseInt(time[1].split('+')[0]);
-    if (time[0] < 0 || time[0] > 23 || time[1] < 0 || time[1] > 59) {
+    if (time[0] < 0 < time[0] > 23 || time[1] < 0 || time[1] > 59) {
 
         return true;
     }
@@ -120,7 +120,7 @@ function addBankTime(workingHours) {
     for (var i = 0; i < 3; i++) {
         var intHour = parseInt(close[0]);
         dateArray[i] = new Date(2016, 9, (i + 24), parseInt(open[0]), parseInt(open[1]));
-        dateArray[i + 3] = new Date(2016, 9, (i + 24), intHour, parseInt(close[1].substr(0, 2)));
+        dateArray[i + 3] = new Date(2016, 9, (i + 24), intHour, parseInt(close[1].split('+')[0]));
         if (dateArray[i] > dateArray[i + 3] || !getTimeZone(workingHours)) {
 
             return false;
