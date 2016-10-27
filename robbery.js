@@ -182,7 +182,23 @@ function getDay(string) {
             return 27;
         default:
 
+            return getDay2(string);
+    }
+}
+function getDay2(string) {
+    switch (string) {
+        case 'ПТ':
+
             return 28;
+        case 'СБ':
+
+            return 29;
+        case 'ВС':
+
+            return 30;
+        default:
+
+            return 31;
     }
 }
 
@@ -300,14 +316,7 @@ function getTimeLater(duration) {
         return false;
     }
     var dateForCheck = timeForWork[goodTime[0]][goodTime[1]].dateFrom;
-    var dateFr = timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(dateForCheck
-            .getMinutes() + 30);
-    var dateTo = timeForWork[goodTime[0]][goodTime[1]].dateFrom;
-    if (dateFr >= dateTo) {
-        timeForWork[goodTime[0]][goodTime[1]].dateFrom = dateTo;
-    } else {
-        timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(dateForCheck.getMinutes() + 30);
-    }
+    timeForWork[goodTime[0]][goodTime[1]].dateFrom.setMinutes(dateForCheck.getMinutes() + 30);
     if (getTime(duration) === false) {
         timeForWork[goodTime[0]][goodTime[1]].dateFrom = dateForCheck;
 
