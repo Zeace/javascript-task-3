@@ -89,9 +89,10 @@ function isValidBTime(workingHours) {
 }
 
 function isValidOneTime(time) {
+    var timeZone = parseInt(time[1].split('+')[1]);
     time[0] = parseInt(time[0]);
     time[1] = parseInt(time[1].split('+')[0]);
-    if (time[0] < 0 || time[0] > 23 || time[1] < 0 || time[1] > 59) {
+    if (time[0] < 0 || time[0] > 23 || time[1] < 0 || time[1] > 59 || timeZone > 24) {
 
         return true;
     }
@@ -152,7 +153,8 @@ function addSheduleTime(schedule, workingHours) {
 
 function correctionSchedule(interval, timeZone) {
     for (var key in interval) {
-        if (typeof(interval[key]) === 'object' || !timeZone) {
+        if (typeof(interval[key]) === 'object' || !timeZone || parseInt(interval[key]
+                .split('+')[1]) > 24) {
 
             return false;
         }
@@ -182,23 +184,7 @@ function getDay(string) {
             return 27;
         default:
 
-            return getDay2(string);
-    }
-}
-function getDay2(string) {
-    switch (string) {
-        case 'ПТ':
-
-            return 28;
-        case 'СБ':
-
-            return 29;
-        case 'ВС':
-
-            return 30;
-        default:
-
-            return 31;
+            return 38;
     }
 }
 
