@@ -2,6 +2,7 @@
 
 exports.isStar = true;
 var DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+var TRANSFER_TIME = 30;
 
 exports.getAppropriateMoment = function (schedule, duration, workingHours) {
     console.info(schedule, duration, workingHours);
@@ -56,52 +57,41 @@ function findTime(schedule, workingHours) {
 }
 
 function addBankTime(workingHours) {
-    var open = workingHours.from.split(':');
-    var close = workingHours.to.split(':');
+    var bankSchedule = [];
+    var intOpenHour = parseInt(workingHours.from.split(':')[0], 10);
+    var intOpenMinute = parseInt(workingHours.from.split(':')[1][0], 10);
+    var intCloseHour = parseInt(workingHours.to.split(':')[0], 10);
+    var intCloseMinute = parseInt(workingHours.to.split(':')[1].split('+')[0], 10);
     var dateArray = [];
     for (var i = 0; i < 3; i++) {
-        var intHour = parseInt(close[0]);
-        dateArray[i] = new Date(2016, 9, (i + 24), parseInt(open[0]), parseInt(open[1]));
-        dateArray[i + 3] = new Date(2016, 9, (i + 24), intHour, parseInt(close[1].split('+')[0]));
+        dateArray[i] = new Date(2016, 9, (i + 24), intOpenHour, intOpenMinute);
+        dateArray[i + 3] = new Date(2016, 9, (i + 24), intCloseHour, intCloseMinute);
         if (dateArray[i] > dateArray[i + 3] || !getTimeZone(workingHours)) {
 
             return false;
         }
-    }
-
-    return addBankDays(dateArray);
-}
-
-function getTimeZone(workingHours) {
-    var timeZoneBank = workingHours.from !== undefined ? Number(workingHours.from
-        .split('+')[1]) : 0;
-
-    return timeZoneBank;
-}
-
-function addBankDays(dateArray) {
-    var bankSchedule = [];
-    for (var i = 0; i < 3; i++) {
         bankSchedule.push({ 'dateFrom': dateArray[i], 'dateTo': dateArray[i + 3] });
     }
 
     return bankSchedule;
 }
 
+function getTimeZone(workingHours) {
+    var timeZone = Number(workingHours.from.split('+')[1]);
+    var timeZoneBank = workingHours.from !== undefined ? timeZone : 0;
+
+    return timeZoneBank;
+}
+
 function addSheduleTime(schedule, workingHours, oldWorkSchedule) {
     var workSchedule = oldWorkSchedule;
-    var keys = [];
-    for (var key in schedule) {
-        if ({}.hasOwnProperty.call(schedule, key)) {
-            keys.push(key);
-        }
-    }
-    for (var j = 0; j < keys.length; j++) {
-        for (var i = 0; i < schedule[keys[j]].length; i++) {
-            correctionSchedule(schedule[keys[j]][i], getTimeZone(workingHours));
-            changeTimeForWork(schedule[keys[j]][i].from, schedule[keys[j]][i].to, workSchedule);
-        }
-    }
+    var keys = Object.keys(schedule);
+    keys.forEach(function (keyValue) {
+        schedule[keyValue].forEach(function (interval) {
+            correctionSchedule(interval, getTimeZone(workingHours));
+            changeTimeForWork(interval.from, interval.to, workSchedule);
+        });
+    });
 
     return workSchedule;
 }
@@ -109,15 +99,15 @@ function addSheduleTime(schedule, workingHours, oldWorkSchedule) {
 function correctionSchedule(interval, timeZone) {
     for (var key in interval) {
         if (typeof(interval[key]) === 'object' || !timeZone || parseInt(interval[key]
-                .split('+')[1]) > 24) {
-
+                .split('+')[1], 10) > 24) {
             return false;
         }
         var day = getDay(interval[key].substr(0, 2));
-        var corrective = timeZone - parseInt(interval[key].split('+')[1], 10);
+        var menTimeZone = parseInt(interval[key].split('+')[1], 10);
+        var corrective = timeZone - menTimeZone;
         var hour = parseInt(interval[key].substr(3, 2), 10) + corrective;
-        interval[key] = new Date (2016, 9, day, hour, parseInt(interval[key].substr(6, 2), 10));
-
+        var minute = parseInt(interval[key].substr(6, 2), 10);
+        interval[key] = new Date (2016, 9, day, hour, minute);
     }
 
     return true;
@@ -126,19 +116,14 @@ function correctionSchedule(interval, timeZone) {
 function getDay(string) {
     switch (string) {
         case 'ПН':
-
             return 24;
         case 'ВТ':
-
             return 25;
         case 'СР':
-
             return 26;
         case 'ЧТ':
-
             return 27;
         default:
-
             return 38;
     }
 }
@@ -155,10 +140,10 @@ function changeTimeForWork(from, to, workSchedule) {
     return true;
 }
 
-function calculateTime(from, to, i, workSchedule) {
+function calculateTime(from, to, intervalNum, workSchedule) {
     var set = 0;
-    var dateFrom = workSchedule[i].dateFrom;
-    var dateTo = workSchedule[i].dateTo;
+    var dateFrom = workSchedule[intervalNum].dateFrom;
+    var dateTo = workSchedule[intervalNum].dateTo;
     var newTime = [];
     if (from >= dateFrom && from <= dateTo) {
         newTime.push({ 'dateFrom': dateFrom, 'dateTo': from });
@@ -169,25 +154,28 @@ function calculateTime(from, to, i, workSchedule) {
         set++;
     }
     if (to > dateTo && from < dateFrom) {
-        changeTime(-2, dateFrom, workSchedule);
+        changeTime(-1, dateFrom, workSchedule);
 
         return true;
     }
     if (set !== 0) {
-        changeTime(i, newTime, set, workSchedule);
+        changeTime(intervalNum, newTime, set, workSchedule);
     }
 }
 
-function changeTime(i, newTime, set, workSchedule) {
-    if (i === -2) {
+// @param {number} intervalNum - номер отрезка свободного времени
+// передаётся -1 в случае, когда отрезок разбивается на 2, а не отсекается край
+
+function changeTime(intervalNum, newTime, set, workSchedule) {
+    if (intervalNum === -1) {
         workSchedule.splice(0, workSchedule.length);
         workSchedule.push({ 'dateFrom': newTime, 'dateTo': newTime });
 
         return true;
     }
-    workSchedule.splice(i, 1);
+    workSchedule.splice(intervalNum, 1);
     for (var j = set; j > 0; j--) {
-        workSchedule.splice(i, 0, newTime[j - 1]);
+        workSchedule.splice(intervalNum, 0, newTime[j - 1]);
     }
 
     return true;
@@ -252,7 +240,7 @@ function getTimeLater(duration, timeForWork, goodTime) {
 function transferLate(dateForCheck, num, timeForWork) {
     var a = dateForCheck;
     var b = new Date(a);
-    b.setMinutes(b.getMinutes() + 30);
+    b.setMinutes(b.getMinutes() + TRANSFER_TIME);
     if (timeForWork[num + 1] !== undefined && b > timeForWork[num + 1].dateFrom) {
         return addBusyLate((num + 1), b.valueOf(), timeForWork);
     }
